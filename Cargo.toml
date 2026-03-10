@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "raytracer_2d",
+]
+resolver = "2"
