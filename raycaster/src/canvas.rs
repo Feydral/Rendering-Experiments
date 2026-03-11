@@ -6,8 +6,8 @@ use std::io::{Write, stdout};
 use crate::canvas::color::Color;
 
 pub struct Canvas {
-    width: u16,
-    height: u16,
+    width: u32,
+    height: u32,
     pixels: Vec<Color>,
     out: Vec<u8>,
 }
@@ -22,21 +22,21 @@ impl Canvas {
         stdout().flush().unwrap();
 
         Self {
-            width: w,
-            height: h,
+            width: w as u32,
+            height: h as u32,
             pixels: vec![Color::BLACK; size],
             out: Vec::with_capacity(w as usize * h_half as usize * 20),
         }
     }
 
-    pub fn set_pixel(&mut self, x: u16, y: u16, color: Color) {
+    pub fn set_pixel(&mut self, x: u32, y: u32, color: Color) {
         if x >= self.width || y >= self.height {
             return;
         }
         self.pixels[y as usize * self.width as usize + x as usize] = color;
     }
 
-    pub fn get_pixel(&self, x: u16, y: u16) -> Color {
+    pub fn get_pixel(&self, x: u32, y: u32) -> Color {
         if x >= self.width || y >= self.height {
             return Color::BLACK;
         }
@@ -76,11 +76,11 @@ impl Canvas {
         stdout.flush().unwrap();
     }
 
-    pub fn width(&self) -> u16 {
+    pub fn width(&self) -> u32 {
         self.width
     }
 
-    pub fn height(&self) -> u16 {
+    pub fn height(&self) -> u32 {
         self.height
     }
 }
