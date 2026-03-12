@@ -1,5 +1,5 @@
 use crossterm::event::KeyCode;
-use crate::{canvas::{Canvas, color::Color, input::Input}, map::Map, math::{mathf, numerics::float2::Float2}};
+use crate::{canvas::{Canvas, color::Color, input::Input}, map::Map, math::numerics::float2::Float2};
 
 mod math;
 mod canvas;
