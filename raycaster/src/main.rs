@@ -12,18 +12,22 @@ fn main() {
     
     let map = Map {
         grid: vec![
-            vec![0, 0, 0, 0, 0, 0, 0, 0],
-            vec![0, 0, 0, 0, 0, 0, 0, 0],
-            vec![0, 1, 1, 0, 0, 1, 1, 0],
-            vec![0, 1, 0, 0, 0, 0, 0, 0],
-            vec![0, 0, 0, 1, 0, 1, 1, 0],
-            vec![0, 0, 0, 0, 0, 0, 0, 0],
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            vec![0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+            vec![0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            vec![0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0],
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            vec![0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+            vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            vec![0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
     };
     
-    let mut player_pos = Float2::new(3.5, 2.5);
-    let mut view_dir = Float2::new(0.0, 1.0);
-    let fov: f32 = 90.0;
+    let mut player_pos = Float2::new(6.0, 1.0);
+    let mut view_dir = Float2::UNIT_Y;
+    let fov: f32 = 120.0;
     let move_speed = 0.05_f32;
     let rotation_speed = 0.05_f32;
     
@@ -65,11 +69,12 @@ fn main() {
         for x in 0..canvas.width() {
             for y in 0..canvas.height() {
                 if y > canvas.height() / 2 {
-                    canvas.set_pixel(x, y, Color::new(230, 230, 230));
+                    canvas.set_pixel(x, y, Color::new(200, 200, 200));
                 } else {
                     canvas.set_pixel(x, y, Color::new(30, 30, 30));
                 }
             }
+
             let distance = distances[x as usize].max(0.05);
 
             let wall_height = (projection_dist / distance).min(screen_height * 2.0);
@@ -78,11 +83,11 @@ fn main() {
 
             let max_distance = 10.0;
             let brightness = (1.0 - (distance / max_distance).min(1.0)).max(0.0);
-            let base_color = 200.0;
+            let base_brightness = 150.0;
 
-            let r = (base_color * brightness) as u8;
-            let g = (base_color * brightness) as u8;
-            let b = (base_color * brightness) as u8;
+            let r = (base_brightness * brightness) as u8;
+            let g = (base_brightness * brightness) as u8;
+            let b = (base_brightness * brightness) as u8;
             for y in wall_start..wall_end {
                 canvas.set_pixel(x, y, Color::new(r, g, b));
             }
