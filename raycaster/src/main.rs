@@ -1,10 +1,11 @@
 use crossterm::event::KeyCode;
 
-use crate::{canvas::{Canvas, color::Color, input::Input}, math::numerics::float2::Float2, raycaster::Map};
+use crate::{canvas::{Canvas, color::Color, input::Input}, map::Map, math::numerics::float2::Float2};
 
 mod math;
 mod canvas;
 mod raycaster;
+mod map;
 
 fn main() {
     let mut canvas = Canvas::new();
@@ -24,7 +25,6 @@ fn main() {
     let mut player_pos = Float2::new(3.5, 2.5);
     let mut view_angle = 0.0;
     let fov: f32 = 60.0;
-
     
     loop {
         let _ = input.update();
