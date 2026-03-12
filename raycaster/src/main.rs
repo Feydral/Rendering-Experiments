@@ -1,6 +1,6 @@
 use crossterm::event::KeyCode;
 
-use crate::{canvas::{Canvas, color::Color, input::Input}, map::Map, math::numerics::float2::Float2};
+use crate::{canvas::{Canvas, color::Color, input::Input}, map::Map, math::{mathf, numerics::float2::Float2}};
 
 mod math;
 mod canvas;
@@ -24,7 +24,7 @@ fn main() {
     
     let mut player_pos = Float2::new(3.5, 2.5);
     let mut view_angle = 0.0;
-    let fov: f32 = 60.0;
+    let fov: f32 = 90.0;
     
     loop {
         let _ = input.update();
@@ -69,17 +69,20 @@ fn main() {
 
             let distance = distances[x as usize].max(0.05);
 
-            let wall_height_f = projection_dist / distance;
-            let wall_height_f = wall_height_f.min(screen_height * 2.0);
+            let wall_height = (projection_dist / distance).min(screen_height * 2.0);
+            let wall_start = (screen_center - wall_height / 2.0).max(0.0) as u32;
+            let wall_end = (screen_center + wall_height / 2.0).min(screen_height) as u32;
 
-            let wall_start_f = screen_center - (wall_height_f / 2.0);
-            let wall_end_f = wall_start_f + wall_height_f;
+            let max_distance = 10.0;
+            let brightness = (1.0 - (distance / max_distance).min(1.0)).max(0.0);
 
-            let wall_start = wall_start_f.max(0.0) as u32;
-            let wall_end = wall_end_f.min(screen_height) as u32;
+            let base_color = 200.0;
+            let r = (base_color * brightness) as u8;
+            let g = (base_color * brightness) as u8;
+            let b = (base_color * brightness) as u8;
 
             for y in wall_start..wall_end {
-                canvas.set_pixel(x, y, Color::GRAY);
+                canvas.set_pixel(x, y, Color::new(r, g, b));
             }
         }
         
