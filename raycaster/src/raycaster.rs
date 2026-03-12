@@ -6,15 +6,20 @@ const MAX_DDA_STEPS: usize = 100;
 pub fn cast_rays(pos: Float2, view_angle: f32, fov: f32, resolution: u32, map: &Map) -> Vec<f32> {
     let mut rays = Vec::with_capacity(resolution as usize);
     
-    let start_angle = view_angle - (fov / 2.0);
-    let angle_step = fov / resolution as f32;
+    let projection_dist = 1.0;
+    let half_fov = fov / 2.0;
+    let projection_plane_width = 2.0 * projection_dist * half_fov.tan();
     
     for i in 0..resolution {
-        let ray_angle = start_angle + (i as f32 * angle_step);
+        let screen_x = (i as f32 / resolution as f32) - 0.5;
+        let plane_x = screen_x * projection_plane_width;
+        
+        let ray_angle = plane_x.atan2(projection_dist) + view_angle;
+        
         let distance = cast_single_ray(pos, ray_angle, map);
-
-        let angle_diff = ray_angle - view_angle;
-        let corrected_distance = distance * angle_diff.cos();
+        
+        let relative_angle = ray_angle - view_angle;
+        let corrected_distance = distance * relative_angle.cos();
         
         rays.push(corrected_distance);
     }
