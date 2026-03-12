@@ -3,8 +3,10 @@ use crate::{map::Map, math::numerics::float2::Float2};
 const MAX_RAY_DISTANCE: f32 = 50.0;
 const MAX_DDA_STEPS: usize = 100;
 
-pub fn cast_rays(pos: Float2, view_angle: f32, fov: f32, resolution: u32, map: &Map) -> Vec<f32> {
+pub fn cast_rays(pos: Float2, view_direction: Float2, fov: f32, resolution: u32, map: &Map) -> Vec<f32> {
     let mut rays = Vec::with_capacity(resolution as usize);
+
+    let view_angle = view_direction.y.atan2(view_direction.x);
     
     let projection_dist = 1.0;
     let half_fov = fov / 2.0;
@@ -13,7 +15,7 @@ pub fn cast_rays(pos: Float2, view_angle: f32, fov: f32, resolution: u32, map: &
     for i in 0..resolution {
         let screen_x = (i as f32 / resolution as f32) - 0.5;
         let plane_x = screen_x * projection_plane_width;
-        
+
         let ray_angle = plane_x.atan2(projection_dist) + view_angle;
         
         let distance = cast_single_ray(pos, ray_angle, map);
