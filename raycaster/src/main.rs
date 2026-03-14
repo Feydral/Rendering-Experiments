@@ -27,7 +27,7 @@ fn main() {
     
     let mut player_pos = Float2::new(6.0, 1.0);
     let mut view_dir = Float2::UNIT_Y;
-    let fov: f32 = 120.0;
+    let mut fov: f32 = 60.0;
     let move_speed = 0.05_f32;
     let rotation_speed = 0.05_f32;
     
@@ -36,6 +36,12 @@ fn main() {
         if input.is_key_down(KeyCode::Esc) { break; }
         
         canvas.clear();
+
+        if input.is_key_pressed(KeyCode::Up) {
+            fov -= 0.5;
+        } else if input.is_key_pressed(KeyCode::Down) {
+            fov += 0.5;
+        }
         
         if input.is_key_pressed(KeyCode::Char('a')) {
             let cos_a = (-rotation_speed).cos();
@@ -65,11 +71,13 @@ fn main() {
         let projection_dist = (canvas.width() as f32 / 2.0) / (fov / 2.0 * std::f32::consts::PI / 180.0).tan();
         let screen_height = canvas.height() as f32;
         let screen_center = screen_height / 2.0;
+
+        canvas.clear();
         
         for x in 0..canvas.width() {
             for y in 0..canvas.height() {
                 if y > canvas.height() / 2 {
-                    canvas.set_pixel(x, y, Color::new(200, 200, 200));
+                    canvas.set_pixel(x, y, Color::new(210, 210, 210));
                 } else {
                     canvas.set_pixel(x, y, Color::new(30, 30, 30));
                 }
@@ -81,10 +89,10 @@ fn main() {
             let wall_start = (screen_center - wall_height / 2.0).max(0.0) as u32;
             let wall_end = (screen_center + wall_height / 2.0).min(screen_height) as u32;
 
-            let max_distance = 10.0;
-            let brightness = (1.0 - (distance / max_distance).min(1.0)).max(0.0);
-            let base_brightness = 150.0;
+            let max_wall_height = screen_height * 2.0;
+            let brightness = (wall_height / max_wall_height).min(1.0);
 
+            let base_brightness = 200.0;
             let r = (base_brightness * brightness) as u8;
             let g = (base_brightness * brightness) as u8;
             let b = (base_brightness * brightness) as u8;
