@@ -47,7 +47,6 @@ impl Canvas {
         self.pixels.fill(Color::BLACK);
     }
 
-
     pub fn render(&mut self) {
         if let Ok((w, h_half)) = terminal::size() {
             let h = h_half * 2;
@@ -114,5 +113,12 @@ impl Canvas {
 
     pub fn height(&self) -> u32 {
         self.height
+    }
+}
+
+impl Drop for Canvas {
+    fn drop(&mut self) {
+        print!("\x1b[?25h\x1b[?1049l\x1b[2J\x1b[3J");
+        stdout().flush().unwrap();
     }
 }
